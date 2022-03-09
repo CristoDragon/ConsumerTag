@@ -14,7 +14,7 @@ st.subheader("Author: Runsheng Xu")
 CT_data = pd.read_csv("https://raw.githubusercontent.com/CristoDragon/CSE5243/main/ConsumerTag(utf8).csv", encoding="utf8")
 # Replcace all empty cells with NaN
 df1 = CT_data.replace(r'^\s*$', np.nan, regex=True)
-st.write(df1)
+
 
 st.subheader("1. 平均每单购买金额的分布情况分析")
 # Create a histogram to show the distribution of "平均每单购买金额"
