@@ -65,13 +65,13 @@ histogram3 = alt.Chart(df2, title=title3).transform_fold(
 ).encode(
     alt.X('log(平均每单购买金额):Q', bin=alt.Bin(maxbins=100)),
     alt.Y('count()', stack=None),
-    alt.Color('性别:N')
-    
+    alt.Color('性别:N')  
 )
 st.altair_chart(histogram3.interactive(), use_container_width = True)
 st.write("由于原始数据的histogram过于skewed,我们对'平均每单购买金额'取对数'以后可以看到基本服从正态分布. 在此图中可以清楚 \
     的看到男性用户在各个购买金额上所对应的数量基本都多余女性用户,可能是由于采集的样本中男性客户总数要多余女性用户. 除此以外 \
         他们的分布状况并无太大区别.")
+
 
 
 st.subheader("2. 用户偏好品牌的分布情况分析")
@@ -86,7 +86,6 @@ df5 = df3[["偏好品牌top2", "偏好品牌top2_Count"]].groupby("偏好品牌t
 df5.sort_values(by=["top2_Count"], ascending=False, inplace=True)
 df6 = df3[["偏好品牌top3", "偏好品牌top3_Count"]].groupby("偏好品牌top3", as_index=False).count().rename(columns={'偏好品牌top3_Count':'top3_Count'})
 df6.sort_values(by=["top3_Count"], ascending=False, inplace=True)
-
 
 title4 = alt.TitleParams("用户偏好品牌top1的分布状况(前10名)", subtitle=["图 2.1"])
 barchart1 = alt.Chart(df4.iloc[0:10,:], title=title4).mark_bar(opacity=0.5, color="blue").encode(
@@ -115,8 +114,44 @@ st.write("从图2.1,图2.2和图2.3可以看出,七匹狼,康师傅,可口可乐
         丰富度等,进而提升客流.")
 
 
+# Create a readial chart
+title4 = alt.TitleParams("用户偏好品牌top1的分布状况(前7名)", subtitle=["图 2.4"])
+radial1 = alt.Chart(df4.iloc[0:7,:], title=title4).encode(
+    theta = alt.Theta("top1_Count:Q", stack = True),
+    radius = alt.Radius("top1_Count:Q", scale = alt.Scale(type="linear", zero=True, rangeMin=20)),
+    color="偏好品牌top1:N",
+    tooltip = ['偏好品牌top1','top1_Count']
+)
+c1 = radial1.mark_arc(innerRadius=20, stroke="#fff")
+c2 = radial1.mark_text(radiusOffset=10).encode(text="偏好品牌top1:N")
+st.altair_chart(c1 + c2, use_container_width = True)
 
-st.subheader("2. 用户年龄层与平均每单购买金额的交叉分析")
+title5 = alt.TitleParams("用户偏好品牌top2的分布状况(前7名)", subtitle=["图 2.5"])
+radial1 = alt.Chart(df5.iloc[0:7,:], title=title4).encode(
+    theta = alt.Theta("top2_Count:Q", stack = True),
+    radius = alt.Radius("top2_Count:Q", scale = alt.Scale(type="linear", zero=True, rangeMin=20)),
+    color="偏好品牌top2:N",
+    tooltip = ['偏好品牌top2','top2_Count']
+)
+c1 = radial1.mark_arc(innerRadius=20, stroke="#fff")
+c2 = radial1.mark_text(radiusOffset=10).encode(text="偏好品牌top3:N")
+st.altair_chart(c1 + c2, use_container_width = True)
+
+title6 = alt.TitleParams("用户偏好品牌top3的分布状况(前7名)", subtitle=["图 2.6"])
+radial1 = alt.Chart(df6.iloc[0:7,:], title=title4).encode(
+    theta = alt.Theta("top3_Count:Q", stack = True),
+    radius = alt.Radius("top3_Count:Q", scale = alt.Scale(type="linear", zero=True, rangeMin=20)),
+    color="偏好品牌top3:N",
+    tooltip = ['偏好品牌top3','top3_Count']
+)
+c1 = radial1.mark_arc(innerRadius=20, stroke="#fff")
+c2 = radial1.mark_text(radiusOffset=10).encode(text="偏好品牌top3:N")
+st.altair_chart(c1 + c2, use_container_width = True)
+
+
+
+
+st.subheader("3. 用户年龄层与平均每单购买金额的交叉分析")
 # Create a boxplot to reveal the difference in distribution of '平均每单购买金额' in each '年代'
 t1 = alt.TitleParams("用户平均每单购买金额的Boxplot over '年代'", subtitle=["图 3.1"])
 boxplot1 = alt.Chart(df1, title=t1).mark_boxplot(extent=0.5).encode(
@@ -141,3 +176,6 @@ st.write("从图3.2可以看出一些各个年龄段的顾客其平均每单购�
             插值要明显高于其他年龄段,有可能说明90后群体的购买种类丰富,消费能力和消费意愿也存在很大差别,造成了这个variation. \
                 如果仔细观察箱型图中平均值的水平线,可以看到60后的平均购买金额要高于其他年龄段,可能是由于60后以退休人群为主, \
                     消费习惯比较传统(意味着更多在便利店的购买量而不是网购)同时又有一定的消费能力.")
+
+
+
