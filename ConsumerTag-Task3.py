@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import altair as alt
-from vega_datasets import data
 
 
 
