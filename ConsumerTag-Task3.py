@@ -84,7 +84,7 @@ df5 = df3[["偏好品牌top2", "偏好品牌top2_Count"]].groupby("偏好品牌t
 df5.sort_values(by=["top2_Count"], ascending=False, inplace=True)
 df6 = df3[["偏好品牌top3", "偏好品牌top3_Count"]].groupby("偏好品牌top3", as_index=False).count().rename(columns={'偏好品牌top3_Count':'top3_Count'})
 df6.sort_values(by=["top3_Count"], ascending=False, inplace=True)
-df5
+
 
 title4 = alt.TitleParams("用户偏好品牌top1的分布状况(前10名)", subtitle=["图 2.1"])
 barchart1 = alt.Chart(df4.iloc[0:10,:], title=title4).mark_bar(opacity=0.5, color="blue").encode(
