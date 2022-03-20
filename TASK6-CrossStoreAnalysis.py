@@ -5,7 +5,6 @@ import seaborn as sns
 import numpy as np
 import altair as alt
 
-
 st.title("TASK 6: 跨店分析")
 st.subheader("Author: Runsheng Xu")
 
@@ -148,8 +147,8 @@ st.write("从图2.1可以看到,总体上来说随着进店次数的增加,用�
 
 
 
-st.subheader("3. 用户年龄的分析")
-# Create a radial chart to show the 年代 composition of all customers in each store
+st.subheader("3. 用户年龄比例的分析")
+# Create a radial chart to show the 年代 composition of all customers 
 t = alt.TitleParams("所有用户年龄占比分析(总体)", subtitle=["图 3.1 Radial Chart"])
 base = alt.Chart(df2, title=t).encode(
     theta = alt.Theta("count(年代):Q", stack=True),
@@ -164,10 +163,10 @@ st.write("从图3.1可以看出,70后,80后,90后和00后的客户占据了三�
     ,80后占比位居第二. 这说明仅从年龄段来看,年轻群体是三家便利店的主流客户,中老年客户的占比较低. 因此在选择广告营销策略时 \
         可以着重调查年轻群体的喜好,以达到增加主流群体消费额和用户忠诚度等目标.")
 
+# Create a radial chart to show the 年代 composition of all customers in each store
 option = st.selectbox("请选择门店", pd.Series(['A', 'B', 'C']))
 filter_data = df2[df2['门店名称'] == option]
-# Create a radial chart to show the 年代 composition of all customers in each store
-t = alt.TitleParams("用户年龄占比分析(某一门店))", subtitle=["图 3.2 Radial Chart"])
+t = alt.TitleParams("用户年龄占比分析(某一门店)", subtitle=["图 3.2 Radial Chart"])
 base = alt.Chart(filter_data, title=t).encode(
     theta = alt.Theta("count(年代):Q", stack=True),
     radius = alt.Radius("count(年代)", scale=alt.Scale(type="linear", zero=True, rangeMin=20)),
@@ -180,6 +179,55 @@ st.altair_chart((c1 + c2), use_container_width = True)
 st.write("通过选择不同的门店查看性别比例的饼图可以看到,A,B,C三家门店的共同点在于90后的占比都很高,从三分之一到一半不等, \
     80后的占比也都稳定在总数的五分之一左右. 但是00后作为最年轻的群体,在B店所占比例要明显高于A,C两店所占比例,推断可能的 \
         原因是B店附近有相当数量的中小学,作为B店稳定的00后客户来源. 年龄老于70后的用户在三家门店占比均很低,可以不去考虑.")
+
+st.subheader("4. 用户年龄与其进店次数的分析")
+t = alt.TitleParams("用户年龄与其进店次数的关系(三店对比)", subtitle=["图 5.1 Area Chart"])
+areachart1 = alt.Chart(df2, title=t).mark_area().encode(
+    x = "年龄:Q",
+    y = "进店次数:Q",
+    color = "门店名称:N",
+    row = "门店名称:N"
+).properties(
+    height=80
+)
+st.altair_chart(areachart1.interactive(), use_container_width = True)
+st.write("通过对图5.1的分析可知,A店用户的整体进店次数不如B,C两店; C店的活跃用户多集中在17~43岁这个区间, B店的活跃用户 \
+    在各个年龄段均有分布,其中以30岁的活跃用户最为突出.")
+
+
+st.subheader("5. 最受欢迎top1品牌的分析")
+
+count = df_order['品牌'].value_counts()
+list_count = []
+for i in range(1,11):
+    list_count.append(count[i])
+list_brand = ['七匹狼','康师傅','农夫山泉','见福','可口可乐','优思麦','怡宝','长富','双汇']
+df3 = pd.DataFrame(list(zip(list_brand, list_count)), columns =['品牌', '销量'])
+df3["log(销量)"] = np.log(df3["销量"])
+df4 = pd.merge(df3, df_order[['品牌','单项金额']], how='left', on='品牌')
+df5 = df4.groupby(["品牌"], as_index=False)["单项金额"].sum()
+df5.rename({'单项金额': '销售额'}, axis=1, inplace=True)
+df5['log(销售额)'] = np.log(df5['销售额'])
+
+# Create a barchart to show 销量 of top1品牌
+t = alt.TitleParams("最受欢迎top1品牌销量排名", subtitle=["图 4.1 Top K Items"])
+barchart1 = alt.Chart(df3, title=t).mark_bar().encode(
+    x = alt.X('品牌:N', sort='-y', axis=alt.Axis(labelAngle=45)),
+    y = alt.Y('销量:Q'),
+    color = alt.Color('log(销量):Q'),
+    tooltip = ['品牌','销量']
+)
+st.altair_chart(barchart1, use_container_width = True)
+# Create a barchart to show 销售额 of top1品牌
+t = alt.TitleParams("最受欢迎top1品牌销售额排名", subtitle=["图 4.2 Top K Items"])
+barchart2 = alt.Chart(df5, title=t).mark_bar().encode(
+    x = alt.X('品牌:N', sort='-y', axis=alt.Axis(labelAngle=45)),
+    y = alt.Y('销售额:Q'),
+    color = alt.Color('log(销售额):Q'),
+    tooltip = ['品牌','销售额']
+)
+st.altair_chart(barchart2, use_container_width = True)
+st.write("通过对图4.1和4.2的对比,可以得知品牌利润率的基本状况.")
 
 
 
