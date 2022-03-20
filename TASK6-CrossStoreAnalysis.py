@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import altair as alt
-from vega_datasets import data
+
 
 st.title("TASK 6: 跨店分析")
 st.subheader("Author: Runsheng Xu")
