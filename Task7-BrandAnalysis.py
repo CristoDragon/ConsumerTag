@@ -148,7 +148,7 @@ st.write("从图2.2可以看到90后顾客的占比约为50%,80后占比位列�
 
 # Create a histogram to show the distribution of 进店次数 of customers buying 康师傅
 # Pick all customers that 康师傅 is one of their top1 ~ top3 brands
-df1 = df_CT[np.logical_or(df_CT["偏好品牌top1"] == "康师傅", df_CT["偏好品牌top2"] == "康师傅", df_CT["偏好品牌top3"] == "康师傅")]
+df1 = df_CT[np.logical_or(df_CT["偏好品牌top1"] == "康师傅", df_CT["偏好品牌top2"] == "康师傅")]
 # Calculate the percentage of 进店次数 in all customers buying 康师傅
 count = df1['进店次数'].value_counts()
 # Create lists to store the percentage results
