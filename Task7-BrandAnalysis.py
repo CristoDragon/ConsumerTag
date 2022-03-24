@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import altair as alt
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+# from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
 st.title("TASK 7: 品牌分析")
 st.subheader("Author: Runsheng Xu")
